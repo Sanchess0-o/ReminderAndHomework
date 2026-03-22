@@ -1,2 +1,4 @@
 python-telegram-bot==21.5
 APScheduler==3.10.4
+
+# исп pip install requirements.txt
