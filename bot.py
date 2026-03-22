@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime, date
-
+from config import BOT_TOKEN
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
     Application,
@@ -15,7 +15,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 import database as db
 
-TOKEN = "8141983242:AAF9TfvnYrSBiTsa7E2hxoVW99mehS1jXU0"
+TOKEN = BOT_TOKEN
 REMINDER_HOUR = 9
 REMINDER_MINUTE = 0
 
@@ -320,7 +320,7 @@ def main():
     )
     scheduler.start()
 
-    logger.info("Бот запущен. Напоминания в %02d:%02d UTC", REMINDER_HOUR, REMINDER_MINUTE)
+    logger.info("Бот запущен")
     app.run_polling(drop_pending_updates=True)
 
 
