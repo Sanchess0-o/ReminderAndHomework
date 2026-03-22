@@ -1,6 +1,1 @@
-TOKEN = 'Token'
-API_TOKEN = ' '
-DATABASE = 'data'
-
-
-#「 ✦ Вставь свой токен из бота botFather. ✦ 」
+BOT_TOKEN = "8141983242:AAF9TfvnYrSBiTsa7E2hxoVW99mehS1jXU0"
