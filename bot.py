@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime, date
-from AI import API_KEY , generate_ai_text
+from ai import API_KEY , generate_ai_text
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
     Application,
@@ -12,10 +12,11 @@ from telegram.ext import (
     filters,
 )
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from config import BOT_TOKEN
 
 import database as db
 
-TOKEN = "8141983242:AAF9TfvnYrSBiTsa7E2hxoVW99mehS1jXU0"
+TOKEN = "BOT_TOKEN
 AIapi = API_KEY 
 
 REMINDER_HOUR = 9
