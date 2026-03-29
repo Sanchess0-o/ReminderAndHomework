@@ -29,3 +29,7 @@
 
 библиотека для напоминания apscheduler , для телеграм бота aiogram
 
+pip install aiogram
+pip install apscheduler
+
+
