@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime, date
-from config import BOT_TOKEN
+from AI import API_KEY , generate_ai_text
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
     Application,
@@ -15,7 +15,9 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 import database as db
 
-TOKEN = BOT_TOKEN
+TOKEN = "8141983242:AAF9TfvnYrSBiTsa7E2hxoVW99mehS1jXU0"
+AIapi = API_KEY 
+
 REMINDER_HOUR = 9
 REMINDER_MINUTE = 0
 
@@ -28,6 +30,19 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+async def cmd_ai(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user = " ".join(context.args)
+    
+    if not user:
+        await update.message.reply_text("Пожалуйста, напишите запрос после команды. Пример: /ai привет")
+        return
+    await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
+    ai_response = generate_ai_text(user)
+
+    if ai_response:
+        await update.message.reply_text(ai_response)
+    else:
+        await update.message.reply_text("Произошла ошибка при обращении к ИИ")
 
 async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
@@ -38,8 +53,9 @@ async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "/done — отметить задание выполненным\n"
         "/delete — удалить задание\n"
         "/subjects — управление предметами\n"
-        "/cancel — отменить текущее действие",
-        parse_mode="Markdown",
+        "/cancel — отменить текущее действие\n"
+        "/ai — обратиться к ии за помощью", 
+        parse_mode="Markdown"
     )
 
 
@@ -125,7 +141,7 @@ async def step_deadline(update: Update, context: ContextTypes.DEFAULT_TYPE):
         deadline.isoformat(),
     )
     await update.message.reply_text(
-        f" адание добавлено!\nДедлайн: *{deadline.strftime('%d.%m.%Y')}*",
+        f" Задание добавлено!\nДедлайн: *{deadline.strftime('%d.%m.%Y')}*",
         parse_mode="Markdown",
     )
     return ConversationHandler.END
@@ -237,13 +253,14 @@ async def cmd_subjects(update: Update, context: ContextTypes.DEFAULT_TYPE):
     subjects = db.get_subjects(user_id)
 
     if not subjects:
-        await update.message.reply_text(" Предметов пока нет. Добавь первый через /add.")
+        await update.message.reply_text(" Предметов пока нет. Добавь первый через /add. /cancel отменить. ")
         return
 
-    text = " *Твои предметы:*\n\n" + "\n".join(f"  {name}" for _, name in subjects)
-    text += "\n\nНажми на предмет, чтобы удалить:"
+    text = " Твои предметы: \n\n" + "\n".join(f"  {name}" for _, name in subjects)
+    text += "\n\nНажми на предмет, чтобы удалить:\n\n Чтобы отменить действие, нажми /cancel"
     buttons = [
         [InlineKeyboardButton(f" {name}", callback_data=f"delsubj|{sid}")]
+
         for sid, name in subjects
     ]
     await update.message.reply_text(
@@ -305,6 +322,8 @@ def main():
     app.add_handler(CommandHandler("delete",   cmd_delete))
     app.add_handler(CommandHandler("subjects", cmd_subjects))
     app.add_handler(CommandHandler("cancel",   cmd_cancel))
+    app.add_handler(CommandHandler("ai", cmd_ai))
+   
 
     app.add_handler(CallbackQueryHandler(cb_done,           pattern=r"^done\|"))
     app.add_handler(CallbackQueryHandler(cb_delete,         pattern=r"^del\|"))
@@ -320,7 +339,7 @@ def main():
     )
     scheduler.start()
 
-    logger.info("Бот запущен")
+    logger.info("Бот запущен. Напоминания в %02d:%02d UTC", REMINDER_HOUR, REMINDER_MINUTE)
     app.run_polling(drop_pending_updates=True)
 
 
