@@ -27,7 +27,7 @@
 Команда /cancel отменить действие
 
 
-библиотека для напоминания apscheduler , для телеграм бота python-telegram-bot (смотри в requirements.txt)
+библиотека для напоминания apscheduler , для телеграм бота python-telegram-bot, для бд sqlite 
 
 
 
