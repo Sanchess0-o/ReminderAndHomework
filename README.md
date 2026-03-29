@@ -1,7 +1,6 @@
 # ✦ ReminderAndHomework
 
 
-реф : https://github.com/Sanchess0-o/Eco-helper-bot (есть напоминания) . 
 
 Телеграм бот для управления дз с ии помощником.
 
